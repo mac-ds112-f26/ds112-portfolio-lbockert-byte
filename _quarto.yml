@@ -75,9 +75,8 @@ book:
 
     - part: "In-Class Activities"
       chapters:
-      - ica/ica-sample1.qmd
-      - ica/ica-sample2.qmd
       - ica/quarto-demo.qmd
+      - 03-univariate-viz-exercises.qmd
 
     - part: "Extras"
       chapters:
