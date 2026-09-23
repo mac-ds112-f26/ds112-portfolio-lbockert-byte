@@ -21,6 +21,8 @@ A wrangled version of this data, is imported below, after being combined with:
     - purple = something in between
 
 ```{r}
+library(tidyverse)
+
 # Load data
 elections <- read.csv("https://mac-stat.github.io/data/election_2020_county.csv")
 
@@ -45,12 +47,16 @@ We'll use this data to explore voting outcomes within the U.S.'s 2-party system.
 How many, or roughly what percent, of the 3000+ counties did the Republican candidate win in 2020?
 
 -   Take a guess.
+60%
 -   Then make a plot of the `winner` variable.
 -   Then discuss what follow-up questions you might have (and that our data might help us answer).
 
 ```{r}
-
+library(ggplot2)
+ggplot(elections, aes(x = winner_20)) +
+  geom_bar()
 ```
+How did the republicans win by so much? Does this mean they had by far the most votes or just the most counties?
 
 #### Part b
 
@@ -61,9 +67,10 @@ Notice that the distribution of Republican support from county to county is slig
 What follow-up questions do you have?
 
 ```{r}
-
+ggplot(elections, aes(x=repub_pct_20))+
+  geom_density()
 ```
-
+This data is negatively skewed. Why is the largest density of support around 75%?
 
 ## Exercise 1: Quantitative vs Quantitative Intuition Check
 
@@ -86,6 +93,8 @@ Try to replicate this using `ggplot()`. Think:
 ![](https://mac-stat.github.io/images/112/scatterplot_demo.png){width="50%"}
 
 ```{r}
+ggplot(elections, aes(x=repub_pct_20, y=repub_pct_16))+
+  geom_point()
 
 ```
 
@@ -96,7 +105,7 @@ Run each chunk below to build up a a scatterplot of `repub_pct_20` vs `repub_pct
 
 ```{r}
 # Set up the plotting frame
-# How does this differ from the frame for our histogram of repub_pct_20 alone?
+# How does this differ from the frame for our histogram of repub_pct_20 alone? It has two variables.
 ggplot(elections, aes(y = repub_pct_20, x = repub_pct_16))
 ```
 
@@ -109,16 +118,16 @@ ggplot(elections, aes(y = repub_pct_20, x = repub_pct_16)) +
 
 ```{r}
 # Change the shape of the points
-# What happens if you change the shape to another number?
+# What happens if you change the shape to another number? It changes the shape of the points!
 ggplot(elections, aes(y = repub_pct_20, x = repub_pct_16)) +
-  geom_point(shape = 3)
+  geom_point(shape = 4)
 ```
 
 ```{r}
 # Modify the code to make the points "orange"
 # NOTE: Try to anticipate if "color" or "fill" will be useful here. Then try both.
 ggplot(elections, aes(y = repub_pct_20, x = repub_pct_16)) +
-  geom_point()
+  geom_point(color="orange")
 ```
 
 ```{r}
@@ -134,8 +143,11 @@ ggplot(elections, aes(y = repub_pct_20, x = repub_pct_16)) +
 Summarize the relationship between the Republican support in 2020 and 2016. Be sure to comment on:
 
 -   the strength of the relationship: weak/moderate/strong
+Strong relationship
 -   the direction of the relationship: positive/negative
+Positive relationship
 -   outliers, ie, in what state do counties deviate from the national trend? Any ideas why this might be the case?
+No clear outliers
 
 
 ## Exercise 4: Visualizing Trend
@@ -153,7 +165,8 @@ ggplot(elections, aes(y = repub_pct_20, x = repub_pct_16)) +
 Construct a new plot that contains the model smooth but does *not* include the individual point glyphs.
 
 ```{r}
-
+ggplot(elections, aes(x=repub_pct_16, y=repub_pct_20))+
+  geom_smooth()
 ```
 
 #### Part b
@@ -174,13 +187,15 @@ To examine how the 2020 results are related to some county demographics, constru
 ```{r}
 # Scatterplot of repub_pct_20 vs median_rent
 
-
+ggplot(elections, aes(x=median_rent, y=repub_pct_20))+
+  geom_point(size=1)
 
 # Scatterplot of repub_pct_20 vs median_age
 
-
+ggplot(elections, aes(median_age, y=repub_pct_20))+
+  geom_point(size=1)
 ```
-
+Median rent is a better predictor of republican support.
 
 ## Exercise 6: A Sad Scatterplot
 
@@ -190,7 +205,7 @@ Next, let's explore the relationship between a county's 2020 Republican support 
 ggplot(elections, aes(y = repub_pct_20, x = historical)) +
   geom_point()
 ```
-
+A scatterplot is not an effective visualization when there is categorical data involved.
 
 ## Exercise 7: Quantitative vs Categorical: Violins & Boxes
 
@@ -215,7 +230,7 @@ Box plots are constructed from five numbers: the minimum, 25th percentile, media
 **REFLECT:**
 
 Summarize what you've learned about the 2020 Republican county-level support within and between red/purple/blue states.
-
+On average, red states had higher county support than purple states and purple states had higher county support than blue states.
 
 ## Exercise 8: Quantitative vs Categorical: Intuition Check
 
@@ -230,7 +245,7 @@ We can also visualize the relationship between `repub_pct_20` and `historical` u
 ![](https://mac-stat.github.io/images/112/density_demo.png){width="50%"}
 
 ```{r}
-ggplot(elections, aes(x = repub_pct_20)) +
+ggplot(elections, aes(x = repub_pct_20, fill=historical)) +
   geom_density()
 ```
 
@@ -241,27 +256,30 @@ Work through the chunks below and address the comments therein.
 
 ```{r}
 # Name two "bad" things about this plot
+# The colors do not match. You can not see all of the graphs.
 ggplot(elections, aes(x = repub_pct_20, fill = historical)) +
   geom_density()
 ```
 
 ```{r}
 # What does scale_fill_manual do?
+# Fills in the different denisty plots.
 ggplot(elections, aes(x = repub_pct_20, fill = historical)) +
   geom_density() +
   scale_fill_manual(values = c("blue", "purple", "red"))
 ```
 
 ```{r}
-# What does alpha = 0.5 do?
+# What does alpha = 0.5 do? Makes the opacity of the fill different.
 # Play around with different values of alpha, between 0 and 1
 ggplot(elections, aes(x = repub_pct_20, fill = historical)) +
-  geom_density(alpha = 0.5) +
+  geom_density(alpha = 0.4) +
   scale_fill_manual(values = c("blue", "purple", "red"))
 ```
 
 ```{r}
 # What does facet_wrap do?!
+#Splits the graph into three smaller graphs.
 ggplot(elections, aes(x = repub_pct_20, fill = historical)) +
   geom_density() +
   scale_fill_manual(values = c("blue", "purple", "red")) +
@@ -271,6 +289,7 @@ ggplot(elections, aes(x = repub_pct_20, fill = historical)) +
 ```{r}
 # Let's try a similar grouping strategy with a histogram instead of density plot.
 # Why is this terrible?
+# Its hard to tell the difference in sizes between the three catagories.
 ggplot(elections, aes(x = repub_pct_20, fill = historical)) +
   geom_histogram(color = "white") +
   scale_fill_manual(values = c("blue", "purple", "red"))
@@ -282,9 +301,11 @@ ggplot(elections, aes(x = repub_pct_20, fill = historical)) +
 We've now learned 3 (of many) ways to visualize the relationship between a quantitative and categorical variable: side-by-side violins, boxplots, and density plots.
 
 -   Which do you like best?
+The boxplots!
 -   What is one pro of density plots relative to boxplots?
+They shows more of the data.
 -   What is one con of density plots relative to boxplots?
-
+It is harder to tell the median and other important numbers.
 
 ## Exercise 11: Categorical vs Categorical: Intuition Check
 
@@ -302,14 +323,15 @@ Spend at most 5 minutes on the following intuition check. Adjust the code below 
 
 ```{r}
 # Plot 1: adjust this to recreate the top plot
-ggplot(elections, aes(x = historical)) +
+ggplot(elections, aes(x = historical, fill = winner_20)) +
   geom_bar()
 ```
 
 ```{r}
 # Plot 2: adjust this to recreate the bottom plot
-ggplot(elections, aes(x = winner_20)) +
-  geom_bar()
+ggplot(elections, aes(x = winner_20, fill = historical)) +
+  geom_bar(fill="gray")+
+  facet_wrap(~historical)
 ```
 
 
@@ -320,6 +342,7 @@ Construct the following 4 bar plot visualizations.
 ```{r}
 # A stacked bar plot
 # How are the "historical" and "winner_20" variables mapped to the plot, i.e. what roles do they play?
+# Historical is on the x-axis and the winner is the stacked variable.
 ggplot(elections, aes(x = historical, fill = winner_20)) +
   geom_bar()
 ```
@@ -348,11 +371,12 @@ ggplot(elections, aes(x = historical, fill = winner_20)) +
 #### Part a
 
 Name one pro and one con of using the "proportional bar plot" instead of one of the other three options.
+A pro is that it uses the whole graph and shows percentages. A con is that the you will not get accurate counts.
 
 #### Part b
 
 What's your favorite bar plot from part and why?
-
+The overlapping denisty plot because it shows a very clear comparison.
 
 ## Exercise 13: Optional Practice
 
@@ -378,20 +402,28 @@ Reflect before doing anything. What types of variables are these? How might you 
 ```{r}
 # How do 3pm temperatures (temp3pm) differ by location?
 
-
+ggplot(weather, aes(x = temp3pm, fill = location))+
+  geom_density(linewidth = 0.2, alpha = 0.4)+
+  theme_classic()
 
 ```
 
 ```{r}
 # How might we predict the 3pm temperature (temp3pm) by the 9am temperature (temp9am)?
 
-
+ggplot(weather, aes(x = temp9am, y = temp3pm))+
+  geom_point(size=0.5)+
+  theme_bw()
 
 ```
 
 ```{r}
 # How do the number of rainy days (raintoday) differ by location?
 
+ggplot(weather, aes(x = raintoday, fill = location))+
+  geom_bar(position = "dodge")+
+  theme_bw()+
+  scale_fill_manual(values = c("pink", "lightblue", "lightgreen"))
 
 ```
 
@@ -405,6 +437,7 @@ Suppose we wanted to better understand how the 2020 Republican support varied fr
 ```{r}
 ggplot(elections, aes(x = repub_pct_20, fill = state_abbr)) + 
   geom_density(alpha = 0.5)
+# Too many states
 ```
 
 A facet wrap would also be bad!
@@ -416,6 +449,7 @@ A facet wrap would also be bad!
 ggplot(elections, aes(x = repub_pct_20)) + 
   geom_density(alpha = 0.5) + 
   facet_wrap(~ state_abbr)
+#Too many states.
 ```
 
 When we want to compare the distribution of some quantitative outcome among *many* groups / categories, a **ridgeline plot** can be a good option. These are also called **joy plots**, named after the album cover for "Unknown Pleasures" by Joy Division. (Look it up!) To make a ridgeline plot, we can use the `geom_density_ridges()` function from the `ggridges` package.
@@ -449,16 +483,19 @@ ggplot(elections, aes(x = repub_pct_20, y = fct_reorder(state_abbr, repub_pct_20
 
 # YOUR TURN: color/fill the ridges according to a state's historical voting patterns 
 # and add meaningful axis labels
-
-
+ggplot(elections, aes(x = repub_pct_20, y = fct_reorder(state_abbr, repub_pct_20), fill =  historical))+
+  geom_density_ridges(alpha=0.5)+
+  scale_fill_manual(values = c("blue", "purple", "red"))
 ```
 
 **Follow-up questions**
 
 -   Which states tend to have the most variability in outcomes from county to county? The least?
+Missori has a lot of variability while Hawaii has very little variability.
 -   What other interesting patterns do you notice?
+Purple states have a larger spread of variation.
 -   Does this plot prompt any other questions?
-
+Why are some red states so low in republican support and vice versa.
 
 ## Exercise 15: State Total Outcomes (Optional)
 
@@ -486,7 +523,8 @@ BUT this isn't the easiest way to communicate or identify the changes from 1 yea
 # Color the points red
 # Scroll to solutions below when you're ready
 
-
+ggplot(elections_by_state, aes(x = repub_pct_20, y = state_abbr))+
+  geom_point(color = "red")
 ```
 
 ```{r}
@@ -505,7 +543,8 @@ ggplot(elections_by_state, aes(x = repub_pct_20, y = state_abbr)) +
 # YOU TRY
 # Reorder the states in terms of their 2020 Republican support (not alphabet)
 # Scroll to solutions below when you're ready
-
+ggplot(elections_by_state, aes(x = repub_pct_20, y = fct_reorder(state_abbr, repub_pct_20))) + 
+  geom_point(color = "red")
 
 ```
 
@@ -523,7 +562,7 @@ ggplot(elections_by_state, aes(x = repub_pct_20, y = fct_reorder(state_abbr, rep
 #| fig-height: 10
 
 # Finally, add ANOTHER layer of points for the 2016 outcomes
-# What info does this new geom_point() layer need to run?
+# What info does this new geom_point() layer need to run? It runs a new set of points on top of the old one.
 ggplot(elections_by_state, aes(x = repub_pct_20, y = fct_reorder(state_abbr, repub_pct_20))) + 
   geom_point(color = "red") + 
   geom_point(aes(x = repub_pct_16, y = state_abbr))
@@ -532,5 +571,8 @@ ggplot(elections_by_state, aes(x = repub_pct_20, y = fct_reorder(state_abbr, rep
 **Reflect on the following**
 
 -   What do you think this plot needs? Try it! You might need to do some digging online.
+I think the color of the background should correlate with the color of the party.
 -   Summarize the main takeaways from the plots. Which states changed the most from 2016 to 2020? The least? Where did the Republican support increase? Where did it decrease?
+Utag had the biggest change while West Virginia saw the least change. Republican support decreased in Utah and increased in Colorodo.
 -   What other questions are you left with?
+How did each state have different values that led to these votes.
