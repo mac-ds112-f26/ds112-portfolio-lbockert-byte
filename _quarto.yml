@@ -77,6 +77,7 @@ book:
       chapters:
       - ica/quarto-demo.qmd
       - ica/03-univariate-viz-exercises.qmd
+      - ica/04-bivariate-viz-exercises.qmd
 
     - part: "Extras"
       chapters:
