@@ -23,6 +23,7 @@ h3 {
   margin-top: 3em;
 }
 
+
 .menu-text, .nav-link, #toc-title {
   font-size: .9em;
 }
@@ -32,9 +33,11 @@ h3 {
 }
 
 .sidebar-item-text.sidebar-link.active, .sidebar-item-text.sidebar-link.active .chapter-number {
-  color: #18bc9c;
+  color: #93c54b;
 }
-
+.sidebar-title a {
+  pointer-events: auto;
+}
 p + ul, p + ol {
   margin-top: -1em;
 }
@@ -70,12 +73,30 @@ a:active {
   height: 110%;
   width: 105%;
   border-radius: 1000px;
-  background-image: linear-gradient(to bottom right, #008cff, #e100ff);
+  background-image: linear-gradient(to bottom right, #93c54b, #93c54b);
   z-index: -1;
 }
 
 .code-tools-button:hover {
   z-index: 0;
   color: #f0f0f0;
-  box-shadow: 40px 0 100px #008cff85, -40px 0 100px #e100ffbb ;
+  box-shadow: 40px 0 100px #93c54b, -40px 0 100px #93c54b ;
+}
+
+.callout {
+  border-radius: 8px !important;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05) !important;
+  background-color: #fdfbf7 !important;
+  border-left-color: #93c54b !important;
+}
+.callout-header {
+  background-color: #eaf4d5 !important;
+}
+
+/* Sets icon color to match your left border color */
+.callout-icon-container i {
+  color: #93c54b !important;
+}
+.sidebar-item a[href*="aboutme.html"] {
+  display: none !important;
 }
