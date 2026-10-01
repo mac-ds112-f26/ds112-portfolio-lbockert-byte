@@ -507,12 +507,12 @@
   {
     "objectID": "extra/extra-sample1.html",
     "href": "extra/extra-sample1.html",
-    "title": "Extra Sample 1",
+    "title": "Chemistry Atomic Spreadsheets",
     "section": "",
-    "text": "Add content here",
+    "text": "NotePurpose\n\n\n\nThe following page shows a visual representation of data from my chemistry class. This was an introductory set of data we worked with. The graphical data helped us determine trends within the expiriments.\n\n\n\nCode#Create data set\nmass &lt;- c(90.0, 85.0, 80.0, 75.0, 70.0, 65.0)\nmolesh &lt;- c(0.05148, 0.0502, 0.04715, 0.04552, 0.0437, 0.041)\n\nzn_wiht_h2 &lt;- data.frame(mass, molesh)\n\n\n\nCodelibrary(tidyverse)\n\nggplot(zn_wiht_h2, aes(x = mass, y = molesh))+\n  geom_point()+\n  geom_smooth(method = lm, color = \"salmon\", fill=\"lightpink\")+\n  theme_classic()+\n  labs(x = \"Mass % Zn in alloy\", y = \"Moles H2(g) produced \", title = \"Moles of H2 Produced Based on the Mass Percent Zinc in Alloy\")\n\n\n\n\n\n\n\n\n\n\n\n\n\nNoteResults\n\n\n\nThe data shows a strong positive and linear trend. There are no outliers in this data. This indicates that the moles of diatomic hydrogen produced relies heavily on the percent of Zinc.\n\n\n\nCode#Create data set 2\ntime &lt;- c(0, 10, 20, 30, 40, 50, 60)\nconcentration &lt;- c(5.0, 4.7, 4.4, 4.0, 3.8, 3.4, 3.1)\n\nconcentration_over_time &lt;- data.frame(time, concentration)\n\n\n\nCodeggplot(concentration_over_time, aes(x = time, y = concentration))+\n  geom_point()+\n  geom_smooth(method = lm, color = \"salmon\", fill=\"lightpink\")+\n  theme_classic()+\n  labs(x = \"Time Elapsed in seconds\", y = \"Reactant Concentration in g/mL\", title = \"The Concentration of Reactant After Time Elapses\")\n\n\n\n\n\n\n\n\n\n\n\n\n\nNoteResults\n\n\n\nThe data shows a strong negative and linear trend. There are no outliers in this data. This indicates that the concentration of the reactant changes proportionally as time passes.",
     "crumbs": [
       "Extras",
-      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Extra Sample 1</span>"
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Chemistry Atomic Spreadsheets</span>"
     ]
   },
   {
