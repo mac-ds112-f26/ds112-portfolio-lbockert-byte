@@ -46,8 +46,9 @@ book:
 
   sidebar:
     title: "Lova Bockert"
-    logo: assets/sidebar-logo.png
-    logo-alt: "Random negative space illustration"
+    title-href: assets/aboutme.html
+    logo: assets/cat.png
+    logo-alt: "Sleeping Cat"
     collapse-level: 2
     style: "docked"
     pinned: true
@@ -59,6 +60,7 @@ book:
   chapters:
     - text: "Welcome"
       href: index.qmd
+    - aboutme_files/aboutme.qmd
 
     - part: "Personal Viz Journey"
       chapters:
@@ -78,6 +80,7 @@ book:
       - ica/quarto-demo.qmd
       - ica/03-univariate-viz-exercises.qmd
       - ica/04-bivariate-viz-exercises.qmd
+      - ica/05-multivariate-viz.qmd
 
     - part: "Extras"
       chapters:
@@ -89,7 +92,7 @@ book:
 format:
   html:
     theme: # bootswatch themes--other options https://bootswatch.com/
-      light: flatly
+      light: sandstone
       dark: darkly
     search: true
     toc: true
@@ -109,6 +112,15 @@ format:
     code-fold: true
     number-sections: false
     toc-expand: true
+    header-includes: |
+      <script>
+        document.addEventListener("DOMContentLoaded", function() {
+          var titleLink = document.querySelector(".sidebar-title a");
+          if (titleLink) {
+            titleLink.setAttribute("href", "assets/aboutme.html");
+          }
+        });
+      </script>
     # grid:
     #   sidebar-width: 200px
     #   body-width: 950px
