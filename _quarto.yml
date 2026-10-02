@@ -60,7 +60,7 @@ book:
   chapters:
     - text: "Welcome"
       href: index.qmd
-    - aboutme_files/aboutme.qmd
+    - aboutme_files/aboutme.html
 
     - part: "Personal Viz Journey"
       chapters:
