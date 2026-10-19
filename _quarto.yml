@@ -46,7 +46,7 @@ book:
 
   sidebar:
     title: "Lova Bockert"
-    title-href: assets/aboutme.html
+    href: aboutme_files/aboutme.html
     logo: assets/cat.png
     logo-alt: "Sleeping Cat"
     collapse-level: 2
@@ -81,6 +81,9 @@ book:
       - ica/03-univariate-viz-exercises.qmd
       - ica/04-bivariate-viz-exercises.qmd
       - ica/05-multivariate-viz.qmd
+      - ica/06-spatial-viz.qmd
+      - ica/07-effective-viz.qmd
+      - ica/08-wrangling-verbs.qmd
 
     - part: "Extras"
       chapters:

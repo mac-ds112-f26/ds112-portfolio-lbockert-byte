@@ -15,7 +15,7 @@ This dataset must include either:
 -   location coordinates for your points of interest (for point maps); or
 -   variable outcomes for your regions of interest (for choropleth maps)
 
-\
+
 
 **Piece 2: A background map**
 
@@ -61,7 +61,7 @@ Let's load [the data](../data/our_fave_places.csv) and map it!
 
 
 ```{r}
-#| eval: false
+#| eval: true
 
 fave_places <- read.csv("https://hash-mac.github.io/ds112site-f26/data/our_fave_places.csv")
 
@@ -69,14 +69,6 @@ fave_places <- read.csv("https://hash-mac.github.io/ds112site-f26/data/our_fave_
 head(fave_places)
 ```
 
-```{r}
-#| echo: false
-
-fave_places <- read.csv("../data/our_fave_places.csv")
-
-# Check it out
-head(fave_places)
-```
 
 
 You can use a "two-finger scroll" to zoom in and out.
@@ -174,6 +166,11 @@ starbucks <- read.csv("https://mac-stat.github.io/data/starbucks.csv")
 Let's focus on only those in Minnesota for now:
 
 ```{r}
+library(dplyr)
+```
+
+
+```{r}
 # Don't worry about the syntax
 starbucks_mn <- starbucks |>   
   filter(Country == "US", State.Province == "MN")
@@ -181,6 +178,13 @@ starbucks_mn <- starbucks |>
 
 Create a leaflet map of the Starbucks locations in Minnesota.
 Keep it simple -- go back to ✏️ Map Points with Leaflet for an example.
+
+```{r}
+leaflet(data = starbucks_mn) |>
+  addTiles() |>
+  addMarkers()
+```
+
 
 ## Static Points
 
@@ -204,8 +208,18 @@ It's pretty cool that the plots we already know can provide some spatial context
 But what *don't* you like about this plot?
 
 ```{r}
+library(tidyverse)
+
+ggplot(starbucks, aes(x = Longitude, y = Latitude))+
+  geom_point(aplha = 0.2, size = 0.2, color = "red")
 
 ```
+
+::: {.callout-note title="Answer"}
+
+This map is hard to understand because the points are not on a map.
+
+:::
 
 ### ✏️ Add Country Background
 
@@ -240,7 +254,7 @@ library(mosaic)
 
 # Add a point for each Starbucks
 # NOTE: The Starbucks info is in our starbucks data, not world_boundaries
-# How does this change how we use geom_point?!
+# How does this change how we use geom_point?! geom_point contains the aesthetic layer and now show points on the map.
 ggplot(world_boundaries) + 
   geom_sf() + 
   geom_point(
@@ -254,6 +268,12 @@ ggplot(world_boundaries) +
 ### ✏️ Summarize Starbucks Map
 
 Summarize what you learned about Starbucks from this map.
+
+::: {.callout-note title="Answer"}
+
+Most starbucks are located in the the USA, Europe and Eastern Asia.
+
+:::
 
 ### ✏️ Zoom into Countries
 
@@ -341,16 +361,15 @@ Adjust the code below to make the plot!
 Remove the `#` to run it.
 
 ```{r}
-# ggplot(___) + 
-#   geom___() + 
-#   geom___(
-#     data = ___,
-#     aes(x = ___, y = ___),
-#     alpha = 0.7,
-#     size = 0.2, 
-#     color = 'darkgreen'
-#   ) + 
-#   theme_map()
+ggplot(midwest_boundaries) + 
+   geom_sf() + 
+   geom_point(
+     data = starbucks_midwest,
+     aes(x = Longitude, y = Latitude),
+     alpha = 0.7,
+     size = 0.2, 
+     color = 'darkgreen') + 
+   theme_map()
 ```
 
 ### ✏️ Build Contour Maps
@@ -525,7 +544,11 @@ ggplot(elections_by_state, aes(map_id = state_name, fill = repub_20_categories))
   theme_map() + 
   scale_fill_manual(values = rev(brewer.pal(8, "RdBu")), name = "% Republican")
 ```
+::: {.callout-note title="Answer"}
 
+There does not seem to be a correlation between Starbucks and election data.
+
+:::
 **Details (if you're curious)**
 
 -   `map_id` is a required aesthetic for `geom_map()`.
@@ -595,7 +618,12 @@ ggplot(elections_by_counties, aes(map_id = county_fips, fill = repub_20_categori
 Construct a county-level map of `median_rent`.
 
 ```{r}
-
+ggplot(elections_by_counties, aes(map_id = county_fips, fill = median_rent)) +
+  geom_map(map = county_map) +
+  scale_fill_gradientn(name = "Median rent", colors = c("purple4", "purple","red", "orange", "white")) +
+  expand_limits(x = county_map$long, y = county_map$lat) +
+  theme_map() +
+  theme(legend.position = "right")
 ```
 
 
@@ -604,7 +632,12 @@ Construct a county-level map of `median_rent`.
 Construct a county-level map of `median_age`.
 
 ```{r}
-
+ggplot(elections_by_counties, aes(map_id = county_fips, fill = median_age)) +
+  geom_map(map = county_map) +
+  scale_fill_gradientn(name = "Median Age", colors = c("darkgreen", "lightblue", "white")) +
+  expand_limits(x = county_map$long, y = county_map$lat) +
+  theme_map() +
+  theme(legend.position = "right")
 ```
 
 ### ✏️ Build Choropleth with Leaflet
@@ -613,3 +646,4 @@ Though `ggplot()` is often better for this purpose, we can also make choropleth 
 If you're curious, check out the `leaflet` documentation:
 
 <https://rstudio.github.io/leaflet/choropleths.html>
+
