@@ -1,5 +1,52 @@
 ---
-title: "Extra Sample 1"
+title: "Chemistry Atomic Spreadsheets"
 ---
+::: {.callout-note title="Purpose"}
 
-Add content here
+The following page shows a visual representation of data from my chemistry class. This was an introductory set of data we worked with. The graphical data helped us determine trends within the expiriments.
+
+:::
+
+```{r}
+#Create data set
+mass <- c(90.0, 85.0, 80.0, 75.0, 70.0, 65.0)
+molesh <- c(0.05148, 0.0502, 0.04715, 0.04552, 0.0437, 0.041)
+
+zn_wiht_h2 <- data.frame(mass, molesh)
+```
+
+```{r}
+library(tidyverse)
+
+ggplot(zn_wiht_h2, aes(x = mass, y = molesh))+
+  geom_point()+
+  geom_smooth(method = lm, color = "salmon", fill="lightpink")+
+  theme_classic()+
+  labs(x = "Mass % Zn in alloy", y = "Moles H2(g) produced ", title = "Moles of H2 Produced Based on the Mass Percent Zinc in Alloy")
+```
+::: {.callout-note title="Results"}
+
+The data shows a strong positive and linear trend. There are no outliers in this data. This indicates that the moles of diatomic hydrogen produced relies heavily on the percent of Zinc.
+
+:::
+
+```{r}
+#Create data set 2
+time <- c(0, 10, 20, 30, 40, 50, 60)
+concentration <- c(5.0, 4.7, 4.4, 4.0, 3.8, 3.4, 3.1)
+
+concentration_over_time <- data.frame(time, concentration)
+```
+
+```{r}
+ggplot(concentration_over_time, aes(x = time, y = concentration))+
+  geom_point()+
+  geom_smooth(method = lm, color = "salmon", fill="lightpink")+
+  theme_classic()+
+  labs(x = "Time Elapsed in seconds", y = "Reactant Concentration in g/mL", title = "The Concentration of Reactant After Time Elapses")
+```
+::: {.callout-note title="Results"}
+
+The data shows a strong negative and linear trend. There are no outliers in this data. This indicates that the concentration of the reactant changes proportionally as time passes.
+
+:::
