@@ -24,11 +24,16 @@ To comment/uncomment several lines of code at once, highlight them then click <k
 :::
 
 ```{r}
+library(tidyverse)
+penguins <- read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-07-28/penguins.csv')
+```
+
+```{r}
 # Create a dataset with just Adelie and Chinstrap using %in%
 # Pipe this into `count(species)` to confirm that you only have these 2 species
-# ___ |>
-#   filter(___) |>
-#   count(species)
+ penguins |>
+   filter(species %in% c("Adelie", "Chinstrap")) |>
+   count(species)
 ```
 
 ### ✏️ Filter with `!=`
@@ -36,9 +41,9 @@ To comment/uncomment several lines of code at once, highlight them then click <k
 ```{r}
 # Create a dataset with just Adelie and Chinstrap using !=
 # Pipe this into `count(species)` to confirm that you only have these 2 species
-# ___ |>
-#   filter(___) |>
-#   count(species)
+ penguins |>
+   filter(species != "Gentoo") |>
+   count(species)
 ```
 
 ### ✏️ Explore Missing Data
@@ -91,7 +96,7 @@ penguins_complete <- penguins |>
   na.omit()
 ```
 
-How many penguins did this eliminate?
+How many penguins did this eliminate? 11 penguins
 
 ```{r}
 nrow(penguins_complete)
@@ -102,10 +107,7 @@ nrow(penguins)
 
 Explain why we should only use `na.omit()` in extreme circumstances.
 
-\
-\
-\
-\
+It could delete important data and lead to inaccurate resuts.
 
 ### ✏️ Drop Year & Island
 
@@ -124,7 +126,8 @@ names(penguins)
 Use a shortcut to keep everything but the year and island variables.
 
 ```{r}
-
+penguins |>
+  select(-island, -year)
 ```
 
 
@@ -133,7 +136,8 @@ Use a shortcut to keep everything but the year and island variables.
 Use a shortcut to keep only species and the penguin characteristics measured in mm.
 
 ```{r}
-
+penguins |>
+  select(species, ends_with("mm"))
 ```
 
 
@@ -142,7 +146,8 @@ Use a shortcut to keep only species and the penguin characteristics measured in 
 Use a shortcut to keep only species and bill-related measurements.
 
 ```{r}
-
+penguins |>
+  select(species, contains("bill"))
 ```
 
 
@@ -151,7 +156,8 @@ Use a shortcut to keep only species and bill-related measurements.
 Use a shortcut to keep only species and the length-related characteristics.
 
 ```{r}
-
+penguins |>
+  select(species, contains("length"))
 ```
 
 \
@@ -167,7 +173,7 @@ We've done examples where we need to `filter()` by more than one variable, or `s
 # Change this code to sort the penguins by species, and then island name
 # NOTE: The first row should be an Adelie penguin living on Biscoe island
 penguins |>
-  arrange(species) |> 
+  arrange(species, island) |> 
   head()
 ```
 
@@ -176,7 +182,7 @@ penguins |>
 ```{r}
 # Change this code to count the number of male/female penguins observed for each species
 penguins |>
-  count(species)
+  count(species, sex)
 ```
 
 ### ✏️ Group by 2 Variables
@@ -184,7 +190,7 @@ penguins |>
 ```{r}
 # Change this code to calculate the average body mass by species and sex
 penguins |>
-  group_by(species) |>
+  group_by(species, sex) |>
   summarize(mean = mean(body_mass_g, na.rm = TRUE))
 
 ```
@@ -216,30 +222,30 @@ year(today)
 ```
 
 ```{r}
-# What do these lines produce / what's their difference?
+# What do these lines produce / what's their difference? It produces the month in numbers and words.
 month(today)
 month(today, label = TRUE)
 ```
 
 ```{r}
-# What does this number mean?
+# What does this number mean? How many weeks have passed this year.
 week(today)
 ```
 
 ```{r}
-# What do these lines produce / what's their difference?
+# What do these lines produce / what's their difference? One says what day of the month we're in and the other shows what day of the year we are in.
 mday(today)
 yday(today)  # This is often called the "Julian day"
 ```
 
 ```{r}
-# What do these lines produce / what's their difference?
+# What do these lines produce / what's their difference? One says the day of the week in numbers, the other in words.
 wday(today)
 wday(today, label = TRUE)
 ```
 
 ```{r}
-# What do the results of these 2 lines tell us?
+# What do the results of these 2 lines tell us? The first one asks if it is past or on the date. The second one asks if it is before the date.
 today >= ymd("2024-02-14")
 today < ymd("2024-02-14")
 ```
@@ -270,7 +276,8 @@ head(Birthdays)
 How many days of data do we have for each state?
 
 ```{r}
-
+Birthdays |> 
+  count(state)
 ```
 
 
@@ -279,7 +286,8 @@ How many days of data do we have for each state?
 How many total births were there in this time period?
 
 ```{r}
-
+Birthdays |> 
+  summarise(sum(births))
 ```
 
 
@@ -288,6 +296,10 @@ How many total births were there in this time period?
 How many total births were there per state in this time period, sorted from low to high?
 
 ```{r}
+Birthdays |> 
+  group_by(state) |> 
+  summarise(state_births = sum(births)) |> 
+  arrange(state_births)
 
 ```
 
@@ -299,6 +311,12 @@ Create a new dataset named `daily_births` that includes the total number of birt
 
 ```{r}
 
+daily_births <- Birthdays |>
+  group_by(date, wday, day, year) |>
+  summarise(total = sum(births, na.rm = TRUE))  |>
+  mutate(day_number = yday(date))
+  select(date, year, wday, day, total) 
+
 ```
 
 ### ✏️ Plot Daily Births
@@ -306,6 +324,9 @@ Create a new dataset named `daily_births` that includes the total number of birt
 Using this data, construct a plot of `births` over time, indicating the day of week.
 
 ```{r}
+ggplot(daily_births, aes(x = day_number, y = total)) +
+  geom_point(size = 0.5) +
+  scale_y_continuous(limits = c(5000, 15000))
 
 ```
 
@@ -326,6 +347,12 @@ Calculate the total number of births in each month and year, eg, Jan 1969, Feb 1
 
 ```{r}
 
+Birthdays |>
+  group_by(month) |>
+  summarise(total = sum(births)) |>
+  ggplot(aes(x = month, y = total)) +
+  geom_point()
+
 ```
 
 ### ✏️ Plot Weekly Births by State
@@ -334,7 +361,16 @@ In 1988, calculate the total number of births per week in each state. Get rid of
 
 ```{r}
 
+Birthdays |>
+  filter(year == 1988) |>
+  group_by(state, week = week(date)) |>
+  summarize(weekly_birth = sum(births)) |>
+  filter(week != 53) |>
+  ggplot(aes(x = week, y = weekly_birth, fill = state))+
+  geom_smooth(size = 0.2)
+
 ```
+It seems like California and Texas have the most births. There are generally the most births around week 40, or the end of summer.
 
 ### ✏️ Compare MN & LA
 
@@ -342,15 +378,28 @@ Repeat the above for just Minnesota (MN) and Louisiana (LA). MN has one of the c
 
 ```{r}
 
+Birthdays |>
+  filter(year == 1988, state %in% c("MN", "LA")) |>
+  group_by(state, week = week(date)) |>
+  summarize(weekly_birth = sum(births)) |>
+  filter(week != 53) |>
+  ggplot(aes(x = week, y = weekly_birth, fill = state))+
+  geom_smooth(size = 0.2)
+
 ```
 
-
+The peaks of Louisiana and Minnesota occur at very different. However, they intersect at around late spring, which is around Minnesota's peak and Lousiana's bottom. Lousiana peaks around week 35.
 
 ### ✏️ Sort MA Births
 
 Create a dataset with only births in Massachusetts (MA) in 1979 and sort the days from those with the most births to those with the fewest.
 
 ```{r}
+
+birthdays_MA <- Birthdays |>
+  filter(year == 1979, state == "MA") |>
+  mutate(day_number = yday(date)) |>
+  arrange(births)
 
 ```
 
@@ -359,5 +408,7 @@ Create a dataset with only births in Massachusetts (MA) in 1979 and sort the day
 Make a table showing the five states with the most births between September 9, 1979 and September 12, 1979, including the 9th and 12th. Arrange the table in descending order of births.
 
 ```{r}
-
+birthdays_MA |> 
+  arrange(desc(births)) |>
+  head(5)
 ```
