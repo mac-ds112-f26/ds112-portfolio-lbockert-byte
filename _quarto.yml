@@ -82,7 +82,7 @@ book:
       - ica/04-bivariate-viz-exercises.qmd
       - ica/05-multivariate-viz.qmd
       - ica/06-spatial-viz.qmd
-      - ica/07-effquarto publish gh-pages --no-browserective-viz.qmd
+      - ica/07-effective-viz.qmd
       - ica/08-wrangling-verbs.qmd
       - ica/09-dates.qmd
 
